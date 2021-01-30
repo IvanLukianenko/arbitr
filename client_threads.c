@@ -47,6 +47,8 @@ key1 = 1;
 key2 = 2;
 key3 = 3;
 
+//Поток приема сообщений
+
 void* thread1(void * thread_data){
   while(1){
       if ((len = msgrcv(msqid, (struct msgbuf *) &mybuf, MESSAGE_LENGTH, self_id, 0 )) < 0){
@@ -57,6 +59,8 @@ void* thread1(void * thread_data){
       }
     }
 }
+
+//Поток отправки сообщений
 
 void* thread2(void * thread_data){
   mybuf3.mtype = ARBITR_TYPE;
@@ -78,6 +82,7 @@ void* thread2(void * thread_data){
   }
 }
 
+//Поток для уведомления онлайна
 
 void* thread3(void * thread_data){
   mybuf3.mtype = ARBITR_TYPE;
@@ -102,13 +107,13 @@ int main(){
     printf("msget error");
     return -1;
   }
-  // id 
+  // для приема id
   if ((msqid2 = msgget(key2, 0666 | IPC_CREAT)) < 0)
   {
     printf("msget error");
     return -1;
   }
-  // online
+  // для отправки уведомления онлайна
   if ((msqid3 = msgget(key3, 0666 | IPC_CREAT)) < 0)
   {
     printf("msget error");
